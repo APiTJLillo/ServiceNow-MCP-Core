@@ -1,0 +1,89 @@
+# MCP Server Initiative – Task List
+
+## 1 · Core “MCP Bridge” scoped app (`x_mcp_core`)
+- [ ] **Scaffold app**
+  - [ ] Create new scoped application `MCP Bridge` (namespace `x_mcp_core`)
+  - [ ] Set application access to allow cross‑scope calls (as needed)
+- [ ] **Scripted REST API**
+  - [ ] Resource **`/mcp/list_tools`** – returns static/DB‑driven tool manifest
+  - [ ] Resource **`/mcp/call`** – dispatches tool invocations
+  - [ ] Optional: add SSE endpoint for streaming (`/mcp/stream`)  
+- [ ] **Tool registry**
+  - [ ] Table `x_mcp_core_tool` (name, description, script include, input / output schema JSON)
+  - [ ] Utility Script Include `MCP_ToolRegistry` for look‑ups & validation
+- [ ] **Dispatcher**
+  - [ ] Script Include `MCP_Dispatcher`:
+        * accepts tool name + params  
+        * routes to target Script Include (via `new <scope>.<ClassName>()`)  
+        * handles error / success wrapping
+- [ ] **Auth & ACLs**
+  - [ ] Basic Auth role (`mcp_core_api`) for dev use
+  - [ ] Token header option (`Authorization: Bearer <token>`)
+- [ ] **Unit tests (ATF / Jest)**
+  - [ ] Happy‑path and error cases for dispatcher & registry
+- [ ] **Docs**
+  - [ ] `README` with usage examples and MCP payload samples
+
+## 2 · ITSM MCP server app (`x_mcp_itsm`)
+- [ ] **Scaffold scoped app** (`ITSM MCP`)
+- [ ] **Tool implementations**
+  - [ ] `get_incident` / `create_incident`
+  - [ ] `search_records(table, query)`
+- [ ] **Registration script**
+  - [ ] On install/upgrade, insert records into `x_mcp_core_tool`
+- [ ] **Cross‑scope access**
+  - [ ] Enable “Can read/can run” for `MCP_Dispatcher`  
+        (use explicit namespace when calling from core):contentReference[oaicite:0]{index=0}
+
+## 3 · Dev Tools MCP server app (`x_mcp_devops`)
+- [ ] **Tools**
+  - [ ] `list_business_rules`
+  - [ ] `get_script_include(name)`
+  - [ ] `update_script_include(name, code)`
+- [ ] **Guardrails**
+  - [ ] Limit write tools to dev instances only (instance‑name check)
+
+## 4 · Azure DevOps bridge app (`x_mcp_ado`)
+- [ ] **Credential store**
+  - [ ] Table `x_mcp_ado_cred` (PAT / OAuth tokens)
+- [ ] **Outbound integration**
+  - [ ] RESTMessageV2 for ADO base URL
+- [ ] **Tools**
+  - [ ] `ado_get_work_item(id)`
+  - [ ] `ado_create_work_item(project, type, title, description)`
+- [ ] **Register tools with core**
+
+## 5 · Shared library & utilities
+- [ ] Common Script Include `MCP_JSON` (serialization helpers)
+- [ ] Exception class `MCP_Error`
+
+## 6 · Dev & CI/CD setup
+- [ ] **Repo structure**
+```
+/src/x_mcp_core
+/src/x_mcp_itsm
+/src/x_mcp_devops
+/src/x_mcp_ado
+```
+
+markdown
+Copy
+Edit
+- [ ] **Update Sets / App Repo**
+- [ ] Export each scoped app to its own folder for easy commits
+- [ ] **Automated tests** run in GitHub Actions using ServiceNow CICD APIs
+
+## 7 · Optional enhancements
+- [ ] UI Page for live tool testing
+- [ ] Flow Designer subflows that proxy to `/mcp/call`
+- [ ] Docker compose for local FastMCP proxy if you decide to off‑platform later
+
+---
+
+### How to work the list
+1. Stand up **`x_mcp_core`** first – until `/mcp/list_tools` returns data, all other apps will 404.  
+2. Each satellite app should add its tools during `post install` or `app upgrade`.  
+3. Keep each tool self‑contained: one Script Include ‑> one ServiceNow capability.
+
+Happy building!  
+Ping me anytime you want deeper code stubs or testing strategies.
