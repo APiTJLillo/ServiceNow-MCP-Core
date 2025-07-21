@@ -1,0 +1,8 @@
+{
+  "name": "x_mcp_ado_cred",
+  "label": "ADO Credential",
+  "fields": [
+    {"name": "token", "label": "Token", "type": "string"},
+    {"name": "active", "label": "Active", "type": "boolean"}
+  ]
+}

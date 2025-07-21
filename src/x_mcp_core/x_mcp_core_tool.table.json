@@ -1,0 +1,11 @@
+{
+  "name": "x_mcp_core_tool",
+  "label": "MCP Tool",
+  "fields": [
+    {"name": "name", "label": "Name", "type": "string", "mandatory": true},
+    {"name": "description", "label": "Description", "type": "string"},
+    {"name": "handler", "label": "Handler", "type": "string"},
+    {"name": "inputs", "label": "Inputs", "type": "string"},
+    {"name": "outputs", "label": "Outputs", "type": "string"}
+  ]
+}

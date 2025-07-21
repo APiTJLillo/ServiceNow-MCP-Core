@@ -1,0 +1,13 @@
+{
+  "name": "servicenow-mcp-core",
+  "version": "1.0.0",
+  "description": "This repository contains a set of ServiceNow scoped applications that together implement a modular MCP server. The core application exposes `/mcp/list_tools`, `/mcp/call`, and `/mcp/stream` endpoints and maintains a registry of available tools. Additional applications provide tool implementations for ITSM operations, development utilities and Azure DevOps integration.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/run-tests.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
